@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentManagerMVCandRxJava">
         <activity
+            android:name=".MainActivity2"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

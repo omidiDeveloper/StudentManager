@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">StudentManagerMVCandRxJava</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">last Name</string>
+    <string name="course">Course</string>
+    <string name="score">Score</string>
+    <string name="save">save</string>
 </resources>
