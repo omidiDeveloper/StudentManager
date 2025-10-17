@@ -1,4 +1,4 @@
-package com.example.studentmanagermvcandrxjava.recycler
+package com.example.studentmanagermvcandrxjava.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -11,4 +11,4 @@ data class Student(
     val course: String,
     val score: Int
 
-) :Parcelable
+) : Parcelable

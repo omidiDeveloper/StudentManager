@@ -1,10 +1,11 @@
-package com.example.studentmanagermvcandrxjava.recycler
+package com.example.studentmanagermvcandrxjava.mainScreen
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentmanagermvcandrxjava.databinding.ItemActivityBinding
+import com.example.studentmanagermvcandrxjava.model.Student
 
 class StudentAdapter(val data: ArrayList<Student>, val studentEvent: StudentEvent) :
     RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {

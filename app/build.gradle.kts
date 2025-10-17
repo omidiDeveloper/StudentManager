@@ -54,6 +54,11 @@ dependencies {
     // retrofit library :
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
-// sweet alert dialog =>
+    implementation("com.squareup.retrofit2:adapter-rxjava2:3.0.0")
+
+    // sweet alert dialog =>
     implementation("com.github.f0ris.sweetalert:library:1.6.2")
+
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
 }
