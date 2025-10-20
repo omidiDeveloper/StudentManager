@@ -78,8 +78,8 @@ com.example.studentmanagermvcandrxjava/
 ├── model/
 |  |── api/
 |  |   └──ApiService   
-|  ├──local
-|  |   |──student
+|  ├──local/
+|  |   |──student/
 |  |   |   |──Student    
 |  |   |   └──StudentDao   
 |  |   └──MyDatabase
