@@ -9,7 +9,9 @@ This project allows users to **add, view, update, and delete student records** e
 
 This project demonstrates a **complete Android–Spring Boot integration** using:
 - 🧩 **MVVM architecture** on Android  
-- ⚡ **RxJava2** for asynchronous data handling  
+- ⚡ **RxJava2** for asynchronous data handling
+- ✔️ **Live Data** for change data to live and save with viewModel
+- 💿 **Room** for save data to local
 - 🌐 **Retrofit** for API communication  
 - 💾 **Spring Boot REST API** as the backend  
 
@@ -25,6 +27,8 @@ This project demonstrates a **complete Android–Spring Boot integration** using
 - **MVVM architecture pattern**
 - **Retrofit + RxJava2** integration
 - **SweetAlertDialog** for modern alerts
+- **ViewModel** for save smart
+- **Room** local database
 - **ViewBinding** enabled
 - CRUD operations: Add, View, Update, Delete students
 
@@ -48,6 +52,7 @@ This project demonstrates a **complete Android–Spring Boot integration** using
 |------------|-------------|
 | Language | Kotlin |
 | Architecture | MVVM |
+| LocalDatabase | Room DB|
 | Networking | Retrofit2 + RxJava2 |
 | UI | ViewBinding, SweetAlertDialog |
 | Min SDK | 24 |
@@ -71,9 +76,14 @@ This project demonstrates a **complete Android–Spring Boot integration** using
 
 com.example.studentmanagermvcandrxjava/
 ├── model/
-|  ├──ApiService
-|  ├──Student
-|  └──MainRepository
+|  |── api/
+|  |   └──ApiService   
+|  ├──local
+|  |   |──student
+|  |   |   |──Student    
+|  |   |   └──StudentDao   
+|  |   └──MyDatabase
+|  └──MainRepository  
 |
 ├── MainScreen/
 |   ├──MainScreenActivity
@@ -87,6 +97,9 @@ com.example.studentmanagermvcandrxjava/
 └── utils/
 |   ├──Extentions
 |   ├──Utils
+|   ├──Constance
+|   ├──MainViewModelFactory
+|   ├──ApiServiceSingleTon
 |   └──Constance
 |
 ````
