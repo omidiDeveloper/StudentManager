@@ -1,42 +1,53 @@
 package com.example.studentmanagermvcandrxjava.model
 
-import com.example.studentmanagermvcandrxjava.utils.Constance
+import androidx.lifecycle.LiveData
+import com.example.studentmanagermvcandrxjava.model.api.ApiService
+import com.example.studentmanagermvcandrxjava.model.local.student.Student
+import com.example.studentmanagermvcandrxjava.model.local.student.StudentDao
 import com.example.studentmanagermvcandrxjava.utils.studentJsonObject
 import io.reactivex.Completable
-import io.reactivex.Single
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
-class MainRepository {
-    private var apiService: ApiService
 
-    init {
+class MainRepository (
+    private val apiService: ApiService,
+    private val studentDao: StudentDao
+) {
 
-        val retrofit = Retrofit
-            .Builder()
-            .baseUrl(Constance.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-
-        apiService = retrofit.create(ApiService::class.java)
-
+    fun getAllStudent() : LiveData<List<Student>>{
+        return studentDao.getAll()
     }
 
-    fun getAllStudent() : Single<List<Student>>{
-        return apiService.getAllStudents()
-    }
-
-    fun deleteStudent(studentId: Long?) : Completable{
-        return apiService.deleteStudent(studentId!!)
+    fun refreshData() : Completable{
+        return apiService
+            .getAllStudents()
+            .doOnSuccess {
+                studentDao.insertAll(it)
+            }.ignoreElement()
     }
 
     fun insertStudent( student: Student) : Completable{
-        return apiService.insertStudent(studentJsonObject(student))
+        return apiService
+            .insertStudent(studentJsonObject(student))
+            .doOnComplete {
+                studentDao.insertOrUpdate(student)
+            }
     }
 
     fun updateStudent(studentId: Long? , student: Student) : Completable{
-        return apiService.updateStudent(studentId!! , studentJsonObject(student) )
+        return apiService
+            .updateStudent(studentId!! , studentJsonObject(student) )
+            .doOnComplete {
+                studentDao.insertOrUpdate(student)
+            }
     }
+
+    fun deleteStudent(studentId: Long?) : Completable{
+        return apiService
+            .deleteStudent(studentId!!)
+            .doOnComplete {
+                studentDao.delete(studentId)
+            }
+    }
+
+
 }

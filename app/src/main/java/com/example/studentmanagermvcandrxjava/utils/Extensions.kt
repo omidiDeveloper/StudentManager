@@ -3,7 +3,6 @@ package com.example.studentmanagermvcandrxjava.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
 import io.reactivex.Completable

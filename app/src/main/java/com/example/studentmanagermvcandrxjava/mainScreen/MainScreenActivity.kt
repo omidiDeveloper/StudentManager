@@ -3,28 +3,31 @@ package com.example.studentmanagermvcandrxjava.mainScreen
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.studentmanagermvcandrxjava.addStudent.AddStudentActivity
 import com.example.studentmanagermvcandrxjava.databinding.ActivityMainBinding
 import com.example.studentmanagermvcandrxjava.model.MainRepository
-import com.example.studentmanagermvcandrxjava.model.Student
+import com.example.studentmanagermvcandrxjava.model.local.MyDatabase
+import com.example.studentmanagermvcandrxjava.model.local.student.Student
+import com.example.studentmanagermvcandrxjava.utils.ApiServiceSingleTon
+import com.example.studentmanagermvcandrxjava.utils.MainViewModelFactory
 import com.example.studentmanagermvcandrxjava.utils.asyncRequest
 import com.example.studentmanagermvcandrxjava.utils.showDialog
 import com.example.studentmanagermvcandrxjava.utils.showToast
 import io.reactivex.CompletableObserver
-import io.reactivex.SingleObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 class MainScreenActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
-    lateinit var binding: ActivityMainBinding
-    lateinit var myAdapter: StudentAdapter
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var myAdapter: StudentAdapter
     private val compositeDispose = CompositeDisposable()
-    lateinit var mainScreenViewModel: MainScreenViewModel
+    private lateinit var mainScreenViewModel: MainScreenViewModel
 
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,50 +35,33 @@ class MainScreenActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarMain)
-        mainScreenViewModel = MainScreenViewModel(MainRepository())
+
+        mainScreenViewModel = ViewModelProvider(this,
+            MainViewModelFactory(
+                MainRepository(ApiServiceSingleTon.apiService!!,
+                MyDatabase.getDatabase(applicationContext).studentDao
+                )
+            )
+        ).get(MainScreenViewModel::class.java)
+
+        mainScreenViewModel.getAllStudent().observe(this){
+            refreshRecyclerData(it)
+        }
+
+        mainScreenViewModel.getErrorData().observe(this){
+            Log.e("errorLog", it)
+        }
+
+        initRecycler()
 
         binding.btnAddStudent.setOnClickListener {
             val intent = Intent(this, AddStudentActivity::class.java)
             startActivity(intent)
         }
 
-        compositeDispose.add(
-            mainScreenViewModel.progressBarSubject
-                .subscribe{
-                    if (it){
-                        runOnUiThread {
-                            binding.progressBarMain.visibility = View.VISIBLE
-                            binding.recyclerMain.visibility = View.INVISIBLE
-                        }
-                    }else {
-                        runOnUiThread {
-                            binding.progressBarMain.visibility = View.INVISIBLE
-                            binding.recyclerMain.visibility = View.VISIBLE
-                        }
-                }
-            }
-        )
 
 
-    }
-    override fun onResume() {
-        super.onResume()
-        mainScreenViewModel
-            .getAllStudents()
-            .asyncRequest()
-            .subscribe( object : SingleObserver<List<Student>>{
-                override fun onSubscribe(d: Disposable) {
-                    compositeDispose.add(d)
-                }
 
-                override fun onSuccess(t: List<Student>) {
-                    setDataToRecycler(t)
-                }
-
-                override fun onError(e: Throwable) {
-                    showDialog(e.message!! , this@MainScreenActivity , "Error : ")
-                }
-            })
     }
     override fun onDestroy() {
         compositeDispose.clear()
@@ -106,6 +92,9 @@ class MainScreenActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
         dialog.show()
     }
 
+    private fun refreshRecyclerData(it: List<Student>) {
+        myAdapter.refreshData(it)
+    }
     private fun deleteDataFromServer(student: Student, position: Int) {
         mainScreenViewModel
             .deleteStudent(student.id)
@@ -125,10 +114,9 @@ class MainScreenActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
 
             })
 
-        myAdapter.removeItem(student , position)
     }
-    private fun setDataToRecycler(data: List<Student>) {
-        val myData = ArrayList(data)
+    private fun initRecycler() {
+        val myData = arrayListOf<Student>()
         myAdapter = StudentAdapter(myData, this)
         binding.recyclerMain.adapter = myAdapter
         binding.recyclerMain.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

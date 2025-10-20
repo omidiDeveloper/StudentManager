@@ -1,6 +1,6 @@
 package com.example.studentmanagermvcandrxjava.utils
 
-import com.example.studentmanagermvcandrxjava.model.Student
+import com.example.studentmanagermvcandrxjava.model.local.student.Student
 import com.google.gson.JsonObject
 
 fun studentJsonObject(student: Student) : JsonObject{

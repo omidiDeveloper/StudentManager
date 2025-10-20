@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -59,6 +60,14 @@ dependencies {
     // sweet alert dialog =>
     implementation("com.github.f0ris.sweetalert:library:1.6.2")
 
+    //RxJava2 =>
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
+
+    //Lifecycle =>
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+
+    //Room =>
+    implementation("androidx.room:room-runtime:2.8.2")
+    kapt("androidx.room:room-compiler:2.8.2")
 }

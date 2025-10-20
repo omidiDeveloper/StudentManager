@@ -1,11 +1,12 @@
 package com.example.studentmanagermvcandrxjava.mainScreen
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentmanagermvcandrxjava.databinding.ItemActivityBinding
-import com.example.studentmanagermvcandrxjava.model.Student
+import com.example.studentmanagermvcandrxjava.model.local.student.Student
 
 class StudentAdapter(val data: ArrayList<Student>, val studentEvent: StudentEvent) :
     RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
@@ -53,11 +54,12 @@ class StudentAdapter(val data: ArrayList<Student>, val studentEvent: StudentEven
     }
 
 
-    fun removeItem(student: Student, position: Int) {
 
-        data.remove(student)
-        notifyItemRemoved(position)
-
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshData(it: List<Student>) {
+        data.clear()
+        data.addAll(it)
+        notifyDataSetChanged()
     }
 
     interface StudentEvent {

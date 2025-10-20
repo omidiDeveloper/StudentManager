@@ -1,5 +1,6 @@
-package com.example.studentmanagermvcandrxjava.model
+package com.example.studentmanagermvcandrxjava.model.api
 
+import com.example.studentmanagermvcandrxjava.model.local.student.Student
 import com.google.gson.JsonObject
 import io.reactivex.Completable
 import io.reactivex.Single
